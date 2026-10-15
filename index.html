@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TheCeo">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="İşletme kur, çalışan al, imparatorluğunu büyüt!">
+
+<!-- ============================================ -->
+<!-- 🖼️ SENİN GÖRSELİN ANA EKRAN İKONU OLARAK -->
+<!-- ============================================ -->
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="apple-touch-icon" sizes="192x192" href="logo.png">
+<link rel="apple-touch-icon" sizes="512x512" href="logo.png">
+
+<link rel="manifest" href="manifest.json">
+<title>TheCeo</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    overscroll-behavior: none;
+    -webkit-user-select: none; user-select: none;
+    touch-action: manipulation;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0a;
+    background-image:
+      radial-gradient(ellipse at top, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0a0a 0%, #1a1410 100%);
+    color: #f0e6d2;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: 80px;
+    padding-top: env(safe-area-inset-top);
+    position: relative;
+  }
+  /* Mermer doku overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px),
+      repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 6px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body > * { position: relative; z-index: 1; }
+
+  /* ===== HEADER ===== */
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(20,15,10,0.95) 100%);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 1px 0 rgba(212, 175, 55, 0.15) inset;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4af37, #f9d423, #d4af37, transparent);
+    opacity: 0.6;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 17px;
+    font-weight: 800;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #d4af37;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5), 0 2px 4px rgba(0,0,0,0.8);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .logo-img {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #d4af37;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.6), inset 0 0 8px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+  }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .money-badge {
+    background: linear-gradient(135deg, #2a1f0a 0%, #3d2c0f 100%);
+    border: 1px solid #d4af37;
+    padding: 6px 12px; border-radius: 20px;
+    font-weight: 800; font-size: 12px;
+    color: #f9d423;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(249, 212, 35, 0.2);
+    white-space: nowrap;
+    font-family: Georgia, serif;
+    letter-spacing: 0.3px;
+  }
+  .install-btn {
+    background: linear-gradient(135deg, #d4af37 0%, #f9d423 50%, #d4af37 100%);
+    color: #0a0a0a; border: none;
+    padding: 7px 12px; border-radius: 20px;
+    font-weight: 800; font-size: 12px;
+    cursor: pointer; font-family: inherit;
+    display: none; align-items: center; gap: 4px;
+    animation: pulse 2s infinite;
+    white-space: nowrap;
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.5);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .install-btn.show { display: flex; }
+  .install-btn:active { transform: scale(0.95); }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7), 0 2px 10px rgba(212, 175, 55, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0), 0 2px 10px rgba(212, 175, 55, 0.4); }
+  }
+
+  /* ===== STATS BAR ===== */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 8px; padding: 12px 14px;
+  }
+  .stat-card {
+    background:
+      linear-gradient(135deg, rgba(30, 25, 15, 0.9) 0%, rgba(15, 15, 15, 0.95) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 12px; padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 2px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(212, 175, 55, 0.1), 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+  }
+  .stat-label { font-size: 10px; color: #a89272; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .stat-value { font-size: 15px; font-weight: 800; font-family: Georgia, serif; }
+  .stat-value.green { color: #7fd67f; text-shadow: 0 0 8px rgba(127, 214, 127, 0.3); }
+  .stat-value.red { color: #e07070; text-shadow: 0 0 8px rgba(224, 112, 112, 0.3); }
+  .stat-value.gold { color: #f9d423; text-shadow: 0 0 12px rgba(249, 212, 35, 0.4); }
+
+  /* ===== TABS ===== */
+  .tabs {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, rgba(20,15,10,0.98) 0%, rgba(10,10,10,1) 100%);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(212, 175, 55, 0.3);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    padding: 8px 4px calc(12px + env(safe-area-inset-bottom));
+    z-index: 200;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+  }
+  .tabs::before {
+    content: '';
+    position: absolute; top: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4af37, #f9d423, #d4af37, transparent);
+    opacity: 0.5;
+  }
+  .tab {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 8px 4px; cursor: pointer;
+    border-radius: 10px; transition: all 0.25s;
+    font-size: 10px; color: #7a6a55;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .tab.active {
+    color: #f9d423;
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+    text-shadow: 0 0 10px rgba(249, 212, 35, 0.5);
+  }
+  .tab-icon { font-size: 20px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)); }
+
+  /* ===== CONTENT ===== */
+  .content { padding: 0 14px; }
+  .page { display: none; animation: fadeIn 0.35s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-title {
+    font-size: 13px; font-weight: 800; color: #d4af37;
+    text-transform: uppercase; letter-spacing: 2px;
+    margin: 18px 0 10px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: Georgia, serif;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  }
+  .section-title::before {
+    content: '';
+    width: 4px; height: 16px;
+    background: linear-gradient(180deg, #f9d423, #d4af37, #8b6914);
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.4), transparent);
+    margin-left: 4px;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background:
+      linear-gradient(135deg, rgba(30, 25, 15, 0.85) 0%, rgba(15, 12, 10, 0.95) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 14px; padding: 14px;
+    margin-bottom: 10px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(212, 175, 55, 0.1);
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), transparent);
+  }
+  .card:active { transform: scale(0.99); }
+  .card.locked { opacity: 0.45; filter: grayscale(0.3); }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 8px; }
+  .card-title {
+    font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    color: #f0e6d2;
+    font-family: Georgia, serif;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  }
+  .card-desc { font-size: 12px; color: #a89272; margin-bottom: 10px; line-height: 1.5; }
+  .card-info { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; margin-bottom: 10px; }
+  .card-info span { color: #c9b896; }
+  .card-info b { color: #f9d423; font-weight: 800; text-shadow: 0 0 8px rgba(249, 212, 35, 0.3); }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    width: 100%; padding: 11px 14px; border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 800; cursor: pointer;
+    transition: all 0.2s; font-family: Georgia, serif;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; filter: grayscale(0.5); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #8b6914 0%, #d4af37 25%, #f9d423 50%, #d4af37 75%, #8b6914 100%);
+    color: #0a0a0a;
+    box-shadow: 0 3px 12px rgba(212, 175, 55, 0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+    font-weight: 900;
+  }
+  .btn-success {
+    background: linear-gradient(135deg, #1a4d1a 0%, #2d7a2d 50%, #1a4d1a 100%);
+    color: #b8f5b8;
+    border: 1px solid rgba(127, 214, 127, 0.4);
+    box-shadow: 0 3px 12px rgba(45, 122, 45, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, #4d1a1a 0%, #7a2d2d 50%, #4d1a1a 100%);
+    color: #f5b8b8;
+    border: 1px solid rgba(224, 112, 112, 0.4);
+    box-shadow: 0 3px 12px rgba(122, 45, 45, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-blue {
+    background: linear-gradient(135deg, #1a3d4d 0%, #2d6a7a 50%, #1a3d4d 100%);
+    color: #b8e6f5;
+    border: 1px solid rgba(109, 213, 237, 0.4);
+    box-shadow: 0 3px 12px rgba(45, 106, 122, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-outline {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.02));
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #d4af37;
+  }
+
+  /* ===== EMPTY ===== */
+  .empty {
+    text-align: center; padding: 40px 20px; color: #7a6a55;
+    font-size: 13px;
+    font-style: italic;
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; filter: sepia(0.5); }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-100px);
+    background: linear-gradient(135deg, rgba(30, 25, 15, 0.98), rgba(15, 12, 10, 0.98));
+    border: 1px solid #d4af37;
+    padding: 12px 20px; border-radius: 12px;
+    font-size: 13px; font-weight: 700;
+    color: #f0e6d2;
+    z-index: 999; opacity: 0; transition: all 0.35s;
+    max-width: 90%; text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px rgba(212, 175, 55, 0.3);
+    font-family: Georgia, serif;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { border-color: #e07070; box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px rgba(224, 112, 112, 0.4); }
+  .toast.success { border-color: #7fd67f; box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px rgba(127, 214, 127, 0.4); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 500; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background:
+      linear-gradient(135deg, rgba(30, 25, 15, 0.98) 0%, rgba(10, 10, 10, 0.98) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 18px; padding: 22px; max-width: 400px; width: 100%;
+    animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.2);
+    position: relative;
+  }
+  .modal::before {
+    content: '';
+    position: absolute; top: 0; left: 20%; right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #f9d423, transparent);
+  }
+  @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal h3 {
+    margin-bottom: 12px; font-size: 18px;
+    color: #f9d423;
+    font-family: Georgia, serif;
+    text-shadow: 0 0 15px rgba(249, 212, 35, 0.4);
+  }
+  .modal p { color: #c9b896; font-size: 13px; margin-bottom: 18px; line-height: 1.6; }
+  .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* ===== BADGES ===== */
+  .badge {
+    display: inline-block; padding: 3px 9px;
+    border-radius: 6px; font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    font-family: Georgia, serif;
+    border: 1px solid transparent;
+  }
+  .badge-gold {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(139, 105, 20, 0.15));
+    color: #f9d423;
+    border-color: rgba(212, 175, 55, 0.5);
+    text-shadow: 0 0 8px rgba(249, 212, 35, 0.5);
+  }
+  .badge-green {
+    background: rgba(127, 214, 127, 0.15);
+    color: #7fd67f;
+    border-color: rgba(127, 214, 127, 0.4);
+  }
+  .badge-red {
+    background: rgba(224, 112, 112, 0.15);
+    color: #e07070;
+    border-color: rgba(224, 112, 112, 0.4);
+  }
+  .badge-blue {
+    background: rgba(109, 213, 237, 0.15);
+    color: #6dd5ed;
+    border-color: rgba(109, 213, 237, 0.4);
+  }
+
+  /* ===== LOG ITEMS ===== */
+  .log-item {
+    font-size: 12px; padding: 9px 11px; border-radius: 8px;
+    background: linear-gradient(135deg, rgba(30, 25, 15, 0.6), rgba(15, 12, 10, 0.8));
+    margin-bottom: 6px;
+    display: flex; justify-content: space-between; gap: 8px;
+    border-left: 3px solid #444;
+    color: #c9b896;
+  }
+  .log-item.income { border-left-color: #7fd67f; }
+  .log-item.expense { border-left-color: #e07070; }
+  .log-time { color: #7a6a55; font-size: 10px; white-space: nowrap; font-style: italic; }
+
+  /* ===== INSTALL INFO ===== */
+  .install-info {
+    background:
+      linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(139, 105, 20, 0.06) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 14px; padding: 14px; margin-bottom: 12px;
+    display: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(212, 175, 55, 0.2);
+  }
+  .install-info.show { display: block; animation: fadeIn 0.4s; }
+  .install-info h4 {
+    font-size: 14px; margin-bottom: 6px;
+    color: #f9d423;
+    font-family: Georgia, serif;
+    text-shadow: 0 0 10px rgba(249, 212, 35, 0.3);
+  }
+  .install-info p { font-size: 12px; color: #c9b896; line-height: 1.5; margin-bottom: 10px; }
+
+  /* ===== OFFLINE ===== */
+  .offline-badge {
+    position: fixed; top: 60px; right: 14px;
+    background: linear-gradient(135deg, #7a2d2d, #4d1a1a);
+    border: 1px solid #e07070;
+    color: #f5b8b8; padding: 4px 10px; border-radius: 12px;
+    font-size: 10px; font-weight: 800; z-index: 150;
+    display: none;
+    font-family: Georgia, serif;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+  .offline-badge.show { display: block; }
+
+  /* ===== NOTIF CARD ===== */
+  .notif-card {
+    background:
+      linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(30, 25, 15, 0.6) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 14px; padding: 14px; margin-bottom: 12px;
+    display: none;
+    box-shadow: inset 0 1px 0 rgba(212, 175, 55, 0.15);
+  }
+  .notif-card.show { display: block; animation: fadeIn 0.4s; }
+  .notif-card h4 {
+    font-size: 14px; margin-bottom: 6px;
+    color: #f9d423;
+    font-family: Georgia, serif;
+    text-shadow: 0 0 10px rgba(249, 212, 35, 0.3);
+  }
+  .notif-card p { font-size: 12px; color: #c9b896; line-height: 1.5; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <img src="logo.png" alt="TheCeo" class="logo-img" onerror="this.style.display='none'">
+    <span>TheCeo</span>
+  </div>
+  <div class="header-right">
+    <button class="install-btn" id="installBtn" onclick="installApp()">
+      📲 Yükle
+    </button>
+    <div class="money-badge" id="moneyBadge">₺10.000</div>
+  </div>
+</div>
+
+<div class="offline-badge" id="offlineBadge">📴 Çevrimdışı</div>
+
+<div class="stats-bar">
+  <div class="stat-card">
+    <span class="stat-label">Günlük Gelir</span>
+    <span class="stat-value green" id="statIncome">₺0</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Günlük Gider</span>
+    <span class="stat-value red" id="statExpense">₺0</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Çalışanlar</span>
+    <span class="stat-value" id="statEmployees">0</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Gün</span>
+    <span class="stat-value gold" id="statDay">1</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="notif-card" id="notifCard">
+    <h4>🔔 Bildirimleri Aç</h4>
+    <p>Gün geçtiğinde, işletmen para kazandığında ve önemli olaylarda bildirim al.</p>
+    <button class="btn btn-blue" onclick="requestNotifPermission()">🔔 Bildirimlere İzin Ver</button>
+  </div>
+
+  <div class="install-info" id="installInfo">
+    <h4>📲 Uygulamayı Telefonuna Yükle</h4>
+    <p>TheCeo'yu gerçek bir uygulama gibi ana ekranına ekleyebilir, internetsiz bile oynayabilirsin.</p>
+    <button class="btn btn-primary" onclick="installApp()">📥 Şimdi Yükle</button>
+  </div>
+
+  <div class="page active" id="page-business">
+    <div class="section-title">İşletmelerim</div>
+    <div id="ownedBusinesses"></div>
+    <div class="section-title">Yeni İşletme Aç</div>
+    <div id="availableBusinesses"></div>
+  </div>
+
+  <div class="page" id="page-market">
+    <div class="section-title">Araç Kirala / Çalış</div>
+    <div id="rentals"></div>
+    <div class="section-title">Market</div>
+    <div id="marketItems"></div>
+  </div>
+
+  <div class="page" id="page-staff">
+    <div class="section-title">Çalışanlarım</div>
+    <div id="employees"></div>
+    <div class="section-title">İşe Alım</div>
+    <div id="hireList"></div>
+  </div>
+
+  <div class="page" id="page-finance">
+    <div class="section-title">Finansal Özet</div>
+    <div class="card">
+      <div class="card-info" style="justify-content:space-between">
+        <span>Toplam Gelir: <b class="green" id="totalIncome">₺0</b></span>
+        <span>Toplam Gider: <b class="red" id="totalExpense">₺0</b></span>
+      </div>
+    </div>
+
+    <div class="section-title">Ayarlar</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🔔 Bildirimler</div>
+        <span class="badge" id="notifStatusBadge">Kapalı</span>
+      </div>
+      <div class="card-desc">Gün geçtiğinde ve önemli olaylarda bildirim al.</div>
+      <button class="btn btn-blue" id="notifBtn" onclick="toggleNotifications()">🔔 Bildirimleri Aç</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📳 Titreşim</div>
+        <span class="badge" id="vibStatusBadge">Açık</span>
+      </div>
+      <div class="card-desc">Buton basışlarında ve önemli olaylarda telefon titrer.</div>
+      <button class="btn btn-outline" onclick="toggleVibration()">📳 Aç/Kapat</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📲 Uygulama</div>
+        <span class="badge badge-green" id="pwaStatus">Yüklü ✓</span>
+      </div>
+      <div class="card-desc">Ana ekrana yükle, internetsiz oyna.</div>
+      <button class="btn btn-blue" id="installBtn2" onclick="installApp()">📲 Uygulamayı Yükle</button>
+    </div>
+
+    <div class="section-title">İşlem Geçmişi</div>
+    <div id="logs"></div>
+    <button class="btn btn-danger" style="margin-top:16px" onclick="resetGame()">🔄 Oyunu Sıfırla</button>
+  </div>
+
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-page="business"><div class="tab-icon">🏢</div><div>İşletme</div></div>
+  <div class="tab" data-page="market"><div class="tab-icon">🛒</div><div>Market</div></div>
+  <div class="tab" data-page="staff"><div class="tab-icon">👥</div><div>Çalışan</div></div>
+  <div class="tab" data-page="finance"><div class="tab-icon">💰</div><div>Finans</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <p id="modalText"></p>
+    <div class="modal-btns" id="modalBtns"></div>
+  </div>
+</div>
+
+<script>
+// ===== AYARLAR =====
+let settings = {
+  vibration: true,
+  notifications: false
+};
+
+// ===== TİTREŞİM =====
+function vibrate(pattern = 15) {
+  if (!settings.vibration) return;
+  if ('vibrate' in navigator) {
+    try { navigator.vibrate(pattern); } catch(e) {}
+  }
+}
+function vibrateSuccess() { vibrate([10, 30, 10]); }
+function vibrateError() { vibrate([50, 30, 50]); }
+function vibrateDay() { vibrate([30, 50, 30, 50, 30]); }
+function vibrateInstall() { vibrate([20, 40, 20, 40, 20, 40, 100]); }
+
+function toggleVibration() {
+  settings.vibration = !settings.vibration;
+  saveSettings();
+  vibrate(30);
+  updateVibUI();
+  toast(settings.vibration ? '📳 Titreşim açıldı' : '📴 Titreşim kapatıldı', 'success');
+}
+function updateVibUI() {
+  const badge = $('vibStatusBadge');
+  badge.textContent = settings.vibration ? 'Açık' : 'Kapalı';
+  badge.className = 'badge ' + (settings.vibration ? 'badge-green' : 'badge-red');
+}
+
+// ===== BİLDİRİM =====
+async function requestNotifPermission() {
+  if (!('Notification' in window)) {
+    toast('Bu tarayıcı bildirimleri desteklemiyor', 'error');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    settings.notifications = true;
+    saveSettings();
+    updateNotifUI();
+    toast('🔔 Bildirimler zaten açık!', 'success');
+    $('notifCard').classList.remove('show');
+    return;
+  }
+  try {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      settings.notifications = true;
+      saveSettings();
+      updateNotifUI();
+      toast('🔔 Bildirimler açıldı!', 'success');
+      vibrateSuccess();
+      $('notifCard').classList.remove('show');
+      showNotification('TheCeo', 'Bildirimler aktif! 🎉');
+    } else {
+      toast('Bildirim izni verilmedi', 'error');
+    }
+  } catch(e) {
+    toast('Bildirim izni alınamadı', 'error');
+  }
+}
+
+function toggleNotifications() {
+  if (settings.notifications) {
+    settings.notifications = false;
+    saveSettings();
+    updateNotifUI();
+    toast('🔕 Bildirimler kapatıldı', '');
+  } else {
+    requestNotifPermission();
+  }
+}
+
+function updateNotifUI() {
+  const badge = $('notifStatusBadge');
+  const btn = $('notifBtn');
+  if (settings.notifications && Notification.permission === 'granted') {
+    badge.textContent = 'Açık';
+    badge.className = 'badge badge-green';
+    btn.textContent = '🔕 Bildirimleri Kapat';
+    btn.className = 'btn btn-outline';
+    $('notifCard').classList.remove('show');
+  } else {
+    badge.textContent = 'Kapalı';
+    badge.className = 'badge badge-red';
+    btn.textContent = '🔔 Bildirimleri Aç';
+    btn.className = 'btn btn-blue';
+  }
+}
+
+function showNotification(title, body, tag = 'game') {
+  if (!settings.notifications) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  try {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready.then(reg => {
+        reg.showNotification(title, {
+          body, tag,
+          icon: 'logo.png',
+          badge: 'logo.png',
+          vibrate: settings.vibration ? [30, 50, 30] : undefined
+        });
+      });
+    } else {
+      new Notification(title, { body, tag, icon: 'logo.png' });
+    }
+  } catch(e) { console.log('Bildirim hatası:', e); }
+}
+
+// ===== PWA =====
+let deferredPrompt = null;
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallButtons();
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  hideInstallButtons();
+  vibrateInstall();
+  toast('✅ Uygulama yüklendi!', 'success');
+  showNotification('TheCeo', 'Uygulama başarıyla yüklendi! 🎉');
+});
+
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+function showInstallButtons() {
+  if (isStandalone) return;
+  $('installBtn').classList.add('show');
+  $('installBtn2').style.display = 'flex';
+  $('installInfo').classList.add('show');
+  $('pwaStatus').textContent = 'Yüklenebilir';
+  $('pwaStatus').className = 'badge badge-gold';
+}
+
+function hideInstallButtons() {
+  $('installBtn').classList.remove('show');
+  $('installBtn2').style.display = 'none';
+  $('installInfo').classList.remove('show');
+  $('pwaStatus').textContent = 'Yüklü ✓';
+  $('pwaStatus').className = 'badge badge-green';
+}
+
+async function installApp() {
+  vibrate(20);
+  if (isStandalone) {
+    toast('Uygulama zaten yüklü! 🎉', 'success');
+    return;
+  }
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      toast('Yükleniyor... 📲', 'success');
+      vibrateInstall();
+    }
+    deferredPrompt = null;
+    return;
+  }
+  if (isIOS()) {
+    modal('📲 iPhone\'a Yükle', `
+      <b>Safari'de şu adımları izle:</b><br><br>
+      1️⃣ Alt kısımdaki <b>Paylaş</b> butonuna dokun ⬆️<br>
+      2️⃣ Aşağı kaydır, <b>"Ana Ekrana Ekle"</b> seçeneğini bul<br>
+      3️⃣ <b>"Ekle"</b> butonuna dokun<br><br>
+      Artık ana ekranında bir uygulama olarak görünecek! 🎉
+    `, [{ label: 'Tamam', cls: 'btn-primary' }]);
+    return;
+  }
+  modal('📲 Uygulamayı Yükle', `
+    Tarayıcın otomatik yükleme desteklemiyor.<br><br>
+    <b>Manuel yükleme:</b><br>
+    • Tarayıcı menüsünü aç (⋮ veya ⋯)<br>
+    • <b>"Ana ekrana ekle"</b> veya <b>"Yükle"</b> seçeneğini bul<br>
+    • Onayla
+  `, [{ label: 'Tamam', cls: 'btn-primary' }]);
+}
+
+// ===== OYUN =====
+const DEFAULT_STATE = {
+  money: 10000, day: 1, totalIncome: 0, totalExpense: 0,
+  businesses: [], employees: [], logs: [], ownedItems: []
+};
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+const BUSINESS_TYPES = [
+  { id: 'cafe', name: 'Kafe', emoji: '☕', cost: 5000, baseIncome: 250, customerRate: 12, desc: 'Sıcak içecekler ve tatlılar satarsın.' },
+  { id: 'restoran', name: 'Restoran', emoji: '🍽️', cost: 15000, baseIncome: 700, customerRate: 8, desc: 'Yemek servisi yaparsın, daha çok müşteri.' },
+  { id: 'market', name: 'Süpermarket', emoji: '🏪', cost: 25000, baseIncome: 1200, customerRate: 15, desc: 'Günlük market alışverişi, yüksek müşteri akışı.' },
+  { id: 'oto', name: 'Oto Yıkama', emoji: '🚗', cost: 10000, baseIncome: 500, customerRate: 6, desc: 'Araç yıkama ve bakım hizmeti.' },
+  { id: 'berber', name: 'Berber', emoji: '💈', cost: 7000, baseIncome: 350, customerRate: 10, desc: 'Saç kesimi ve bakım hizmeti.' },
+  { id: 'ecommerce', name: 'E-Ticaret', emoji: '📦', cost: 40000, baseIncome: 2000, customerRate: 20, desc: 'Online satış, yüksek gelir potansiyeli.' },
+  { id: 'gym', name: 'Spor Salonu', emoji: '🏋️', cost: 30000, baseIncome: 1500, customerRate: 5, desc: 'Üyelik sistemi, düzenli gelir.' },
+  { id: 'otel', name: 'Butik Otel', emoji: '🏨', cost: 80000, baseIncome: 4000, customerRate: 4, desc: 'Konaklama, yüksek kâr marjı.' },
+  { id: 'fabrika', name: 'Fabrika', emoji: '🏭', cost: 150000, baseIncome: 8000, customerRate: 3, desc: 'Üretim tesisi, büyük ölçekli gelir.' },
+  { id: 'holding', name: 'Holding', emoji: '🏛️', cost: 500000, baseIncome: 30000, customerRate: 2, desc: 'Çok sektörlü dev şirket.' }
+];
+
+const RENTALS = [
+  { id: 'bisiklet', name: 'Bisiklet Kurye', emoji: '🚲', cost: 50, income: 200, desc: 'Küçük paketler, hızlı teslimat.' },
+  { id: 'motosiklet', name: 'Motosiklet Kurye', emoji: '🏍️', cost: 150, income: 500, desc: 'Orta mesafe teslimatlar.' },
+  { id: 'araba', name: 'Araba Kurye', emoji: '🚗', cost: 300, income: 900, desc: 'Şehir içi geniş teslimat.' },
+  { id: 'kamyonet', name: 'Kamyonet Taşıma', emoji: '🚚', cost: 600, income: 1800, desc: 'Ağır yük taşımacılığı.' },
+  { id: 'taksi', name: 'Taksi Şoförü', emoji: '🚕', cost: 200, income: 700, desc: 'Yolcu taşımacılığı.' }
+];
+
+const MARKET_ITEMS = [
+  { id: 'kahve_makinesi', name: 'Kahve Makinesi', emoji: '☕', cost: 3000, bonus: 0.15, desc: 'Kafe gelirini %15 artırır.' },
+  { id: 'pos', name: 'POS Cihazı', emoji: '💳', cost: 2000, bonus: 0.10, desc: 'Tüm işletmelere %10 bonus.' },
+  { id: 'reklam', name: 'Reklam Panosu', emoji: '📢', cost: 8000, bonus: 0.20, desc: 'Müşteri akışını %20 artırır.' },
+  { id: 'yazilim', name: 'Yönetim Yazılımı', emoji: '💻', cost: 12000, bonus: 0.25, desc: 'Tüm gelirleri %25 artırır.' },
+  { id: 'kamera', name: 'Güvenlik Sistemi', emoji: '📹', cost: 5000, bonus: 0.05, desc: 'Kayıpları azaltır, %5 bonus.' }
+];
+
+const EMPLOYEE_TYPES = [
+  { id: 'kasiyer', name: 'Kasiyer', emoji: '🧑‍💼', salary: 400, bonus: 0.05, desc: 'Müşteri hizmetini hızlandırır.' },
+  { id: 'asci', name: 'Aşçı', emoji: '👨‍🍳', salary: 700, bonus: 0.10, desc: 'Yemek işletmelerine bonus.' },
+  { id: 'temizlikci', name: 'Temizlikçi', emoji: '🧹', salary: 350, bonus: 0.03, desc: 'Genel verimlilik artışı.' },
+  { id: 'mudur', name: 'Müdür', emoji: '👔', salary: 1500, bonus: 0.20, desc: 'İşletme verimliliğini ciddi artırır.' },
+  { id: 'pazarlamaci', name: 'Pazarlamacı', emoji: '📣', salary: 900, bonus: 0.15, desc: 'Müşteri akışını artırır.' }
+];
+
+const NAMES = ['Ahmet', 'Mehmet', 'Ayşe', 'Fatma', 'Ali', 'Zeynep', 'Mustafa', 'Elif', 'Hasan', 'Merve', 'Emre', 'Selin', 'Can', 'Deniz', 'Burak', 'Ece', 'Kaan', 'Buse', 'Onur', 'İrem'];
+
+const fmt = n => '₺' + Math.floor(n).toLocaleString('tr-TR');
+const $ = id => document.getElementById(id);
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function toast(msg, type = '') {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className = 'toast ' + type, 2500);
+  if (type === 'success') vibrateSuccess();
+  else if (type === 'error') vibrateError();
+}
+
+function log(msg, type = 'income') {
+  state.logs.unshift({ msg, type, day: state.day });
+  if (state.logs.length > 50) state.logs.pop();
+}
+
+function modal(title, text, buttons) {
+  $('modalTitle').textContent = title;
+  $('modalText').innerHTML = text;
+  const btns = $('modalBtns');
+  btns.innerHTML = '';
+  buttons.forEach(b => {
+    const el = document.createElement('button');
+    el.className = 'btn ' + (b.cls || 'btn-primary');
+    el.textContent = b.label;
+    el.onclick = () => { vibrate(10); closeModal(); b.action && b.action(); };
+    btns.appendChild(el);
+  });
+  $('modal').classList.add('show');
+}
+function closeModal() { $('modal').classList.remove('show'); }
+
+function getItemBonus() {
+  let bonus = 0;
+  MARKET_ITEMS.forEach(item => {
+    if (state.ownedItems.includes(item.id)) bonus += item.bonus;
+  });
+  return bonus;
+}
+
+function getBusinessIncome(b) {
+  const type = BUSINESS_TYPES.find(t => t.id === b.typeId);
+  const itemBonus = getItemBonus();
+  const employees = state.employees.filter(e => e.businessId === b.id);
+  let empBonus = 0;
+  employees.forEach(e => {
+    const et = EMPLOYEE_TYPES.find(t => t.id === e.typeId);
+    empBonus += et.bonus;
+  });
+  const levelMult = 1 + (b.level - 1) * 0.5;
+  return Math.floor(type.baseIncome * levelMult * (1 + itemBonus + empBonus));
+}
+
+function getBusinessCustomers(b) {
+  const type = BUSINESS_TYPES.find(t => t.id === b.typeId);
+  const itemBonus = getItemBonus();
+  const employees = state.employees.filter(e => e.businessId === b.id);
+  return Math.floor(type.customerRate * (1 + itemBonus) * (1 + employees.length * 0.15));
+}
+
+function getTotalIncome() {
+  let total = 0;
+  state.businesses.forEach(b => total += getBusinessIncome(b));
+  return total;
+}
+function getTotalExpense() {
+  let total = 0;
+  state.employees.forEach(e => total += e.salary);
+  return total;
+}
+function getUpgradeCost(b) {
+  const type = BUSINESS_TYPES.find(t => t.id === b.typeId);
+  return Math.floor(type.cost * 0.8 * b.level);
+}
+
+function render() {
+  $('moneyBadge').textContent = fmt(state.money);
+  $('statIncome').textContent = fmt(getTotalIncome());
+  $('statExpense').textContent = fmt(getTotalExpense());
+  $('statEmployees').textContent = state.employees.length;
+  $('statDay').textContent = state.day;
+  $('totalIncome').textContent = fmt(state.totalIncome);
+  $('totalExpense').textContent = fmt(state.totalExpense);
+  renderBusinesses();
+  renderMarket();
+  renderStaff();
+  renderLogs();
+}
+
+function renderBusinesses() {
+  const owned = $('ownedBusinesses');
+  if (state.businesses.length === 0) {
+    owned.innerHTML = '<div class="empty"><div class="empty-icon">🏢</div>Henüz işletmen yok.<br>Krallığını kurmaya başla!</div>';
+  } else {
+    owned.innerHTML = state.businesses.map(b => {
+      const type = BUSINESS_TYPES.find(t => t.id === b.typeId);
+      const income = getBusinessIncome(b);
+      const customers = getBusinessCustomers(b);
+      const emps = state.employees.filter(e => e.businessId === b.id).length;
+      const upgradeCost = getUpgradeCost(b);
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">${type.emoji} ${b.name} <span class="badge badge-gold">Lv.${b.level}</span></div>
+          </div>
+          <div class="card-info">
+            <span>Gelir: <b>${fmt(income)}/gün</b></span>
+            <span>Müşteri: <b>${customers}/gün</b></span>
+            <span>Çalışan: <b>${emps}</b></span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button class="btn btn-success" onclick="upgradeBusiness(${b.id})" ${state.money < upgradeCost ? 'disabled' : ''}>⬆️ Yükselt ${fmt(upgradeCost)}</button>
+            <button class="btn btn-outline" onclick="sellBusiness(${b.id})">💸 Sat</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  const avail = $('availableBusinesses');
+  const locked = BUSINESS_TYPES.filter(t => !state.businesses.some(b => b.typeId === t.id));
+  if (locked.length === 0) {
+    avail.innerHTML = '<div class="empty">👑 Tüm işletme türlerine sahipsin, kral!</div>';
+  } else {
+    avail.innerHTML = locked.map(t => {
+      const canAfford = state.money >= t.cost;
+      return `
+        <div class="card ${canAfford ? '' : 'locked'}">
+          <div class="card-header">
+            <div class="card-title">${t.emoji} ${t.name}</div>
+            <span class="badge badge-blue">${fmt(t.cost)}</span>
+          </div>
+          <div class="card-desc">${t.desc}</div>
+          <div class="card-info">
+            <span>Temel Gelir: <b>${fmt(t.baseIncome)}/gün</b></span>
+            <span>Müşteri: <b>~${t.customerRate}/gün</b></span>
+          </div>
+          <button class="btn btn-primary" onclick="openBusiness('${t.id}')" ${canAfford ? '' : 'disabled'}>
+            ${canAfford ? '🏗️ İşletme Aç' : '🔒 Yetersiz Bakiye'}
+          </button>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+function renderMarket() {
+  $('rentals').innerHTML = RENTALS.map(r => {
+    const canAfford = state.money >= r.cost;
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">${r.emoji} ${r.name}</div>
+          <span class="badge badge-blue">${fmt(r.cost)}</span>
+        </div>
+        <div class="card-desc">${r.desc}</div>
+        <div class="card-info">
+          <span>Kazanç: <b class="green">+${fmt(r.income)}</b></span>
+        </div>
+        <button class="btn btn-success" onclick="doRental('${r.id}')" ${canAfford ? '' : 'disabled'}>🚀 Çalış</button>
+      </div>
+    `;
+  }).join('');
+
+  $('marketItems').innerHTML = MARKET_ITEMS.map(item => {
+    const owned = state.ownedItems.includes(item.id);
+    const canAfford = state.money >= item.cost;
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">${item.emoji} ${item.name}</div>
+          <span class="badge badge-blue">${fmt(item.cost)}</span>
+        </div>
+        <div class="card-desc">${item.desc}</div>
+        <button class="btn ${owned ? 'btn-outline' : 'btn-primary'}" onclick="buyItem('${item.id}')" ${owned || !canAfford ? 'disabled' : ''}>
+          ${owned ? '✅ Sahipsin' : (canAfford ? '🛒 Satın Al' : '🔒 Yetersiz')}
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderStaff() {
+  if (state.employees.length === 0) {
+    $('employees').innerHTML = '<div class="empty"><div class="empty-icon">👥</div>Henüz çalışanın yok.</div>';
+  } else {
+    $('employees').innerHTML = state.employees.map(e => {
+      const et = EMPLOYEE_TYPES.find(t => t.id === e.typeId);
+      const b = state.businesses.find(b => b.id === e.businessId);
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">${et.emoji} ${e.name}</div>
+            <span class="badge badge-red">${fmt(e.salary)}/gün</span>
+          </div>
+          <div class="card-info">
+            <span>Görev: <b>${et.name}</b></span>
+            <span>İşletme: <b>${b ? b.name : 'Yok'}</b></span>
+            <span>Bonus: <b class="green">+${Math.round(et.bonus*100)}%</b></span>
+          </div>
+          <button class="btn btn-danger" onclick="fireEmployee(${e.id})">🚪 İşten Çıkar</button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  if (state.businesses.length === 0) {
+    $('hireList').innerHTML = '<div class="empty">Önce bir işletme açmalısın.</div>';
+    return;
+  }
+  $('hireList').innerHTML = EMPLOYEE_TYPES.map(et => `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">${et.emoji} ${et.name}</div>
+        <span class="badge badge-red">${fmt(et.salary)}/gün</span>
+      </div>
+      <div class="card-desc">${et.desc}</div>
+      <div class="card-info">
+        <span>Bonus: <b class="green">+${Math.round(et.bonus*100)}%</b></span>
+      </div>
+      <button class="btn btn-blue" onclick="hireEmployee('${et.id}')">👋 İşe Al</button>
+    </div>
+  `).join('');
+}
+
+function renderLogs() {
+  if (state.logs.length === 0) {
+    $('logs').innerHTML = '<div class="empty">Henüz işlem yok.</div>';
+  } else {
+    $('logs').innerHTML = state.logs.map(l => `
+      <div class="log-item ${l.type}">
+        <span>${l.msg}</span>
+        <span class="log-time">Gün ${l.day}</span>
+      </div>
+    `).join('');
+  }
+}
+
+function openBusiness(typeId) {
+  vibrate(15);
+  const t = BUSINESS_TYPES.find(x => x.id === typeId);
+  if (state.money < t.cost) return toast('Yetersiz bakiye!', 'error');
+  state.money -= t.cost;
+  state.totalExpense += t.cost;
+  const id = Date.now() + Math.random();
+  state.businesses.push({ id, typeId, level: 1, name: t.name });
+  log(`${t.emoji} ${t.name} açıldı (-${fmt(t.cost)})`, 'expense');
+  toast(`${t.name} açıldı! 🎉`, 'success');
+  showNotification('Yeni İşletme! 🏢', `${t.name} başarıyla açıldı.`);
+  render();
+}
+
+function upgradeBusiness(id) {
+  vibrate(15);
+  const b = state.businesses.find(x => x.id === id);
+  if (!b) return;
+  const cost = getUpgradeCost(b);
+  if (state.money < cost) return toast('Yetersiz bakiye!', 'error');
+  state.money -= cost;
+  state.totalExpense += cost;
+  b.level++;
+  log(`${b.name} Lv.${b.level} yükseltildi (-${fmt(cost)})`, 'expense');
+  toast(`${b.name} Lv.${b.level} oldu! ⬆️`, 'success');
+  render();
+}
+
+function sellBusiness(id) {
+  vibrate(15);
+  const b = state.businesses.find(x => x.id === id);
+  if (!b) return;
+  const type = BUSINESS_TYPES.find(t => t.id === b.typeId);
+  const sellPrice = Math.floor(type.cost * 0.6 * b.level);
+  modal('İşletmeyi Sat', `<b>${b.name}</b> işletmesini <b>${fmt(sellPrice)}</b> karşılığında satmak istiyor musun?`, [
+    { label: 'Vazgeç', cls: 'btn-outline' },
+    { label: 'Sat', cls: 'btn-danger', action: () => {
+      state.money += sellPrice;
+      state.totalIncome += sellPrice;
+      state.employees = state.employees.filter(e => e.businessId !== id);
+      state.businesses = state.businesses.filter(x => x.id !== id);
+      log(`${b.name} satıldı (+${fmt(sellPrice)})`, 'income');
+      toast('İşletme satıldı!', 'success');
+      render();
+    }}
+  ]);
+}
+
+function doRental(id) {
+  vibrate(15);
+  const r = RENTALS.find(x => x.id === id);
+  if (!r) return;
+  if (state.money < r.cost) return toast('Yetersiz bakiye!', 'error');
+  state.money -= r.cost;
+  state.money += r.income;
+  state.totalIncome += r.income;
+  state.totalExpense += r.cost;
+  log(`${r.emoji} ${r.name}: +${fmt(r.income - r.cost)} net`, 'income');
+  toast(`${r.emoji} ${r.name} tamamlandı! +${fmt(r.income - r.cost)}`, 'success');
+  render();
+}
+
+function buyItem(id) {
+  vibrate(15);
+  const item = MARKET_ITEMS.find(x => x.id === id);
+  if (!item) return;
+  if (state.ownedItems.includes(id)) return toast('Zaten sahipsin!', 'error');
+  if (state.money < item.cost) return toast('Yetersiz bakiye!', 'error');
+  state.money -= item.cost;
+  state.totalExpense += item.cost;
+  state.ownedItems.push(id);
+  log(`${item.emoji} ${item.name} alındı (-${fmt(item.cost)})`, 'expense');
+  toast(`${item.name} satın alındı!`, 'success');
+  render();
+}
+
+function hireEmployee(typeId) {
+  vibrate(15);
+  const et = EMPLOYEE_TYPES.find(x => x.id === typeId);
+  if (!et) return;
+  if (state.businesses.length === 0) return toast('Önce işletme aç!', 'error');
+  const business = state.businesses[Math.floor(Math.random() * state.businesses.length)];
+  const name = rand(NAMES);
+  state.employees.push({
+    id: Date.now() + Math.random(),
+    businessId: business.id,
+    name, salary: et.salary, typeId: et.id
+  });
+  log(`${et.emoji} ${name} ${et.name} olarak işe alındı (${business.name})`, 'expense');
+  toast(`${name} işe alındı! 👋`, 'success');
+  render();
+}
+
+function fireEmployee(id) {
+  vibrate(30);
+  const e = state.employees.find(x => x.id === id);
+  if (!e) return;
+  state.employees = state.employees.filter(x => x.id !== id);
+  log(`👋 ${e.name} işten çıkarıldı`, 'expense');
+  toast(`${e.name} işten çıkarıldı`, '');
+  render();
+}
+
+function resetGame() {
+  vibrate(30);
+  modal('Oyunu Sıfırla', 'Tüm ilerlemen silinecek. Emin misin?', [
+    { label: 'Vazgeç', cls: 'btn-outline' },
+    { label: 'Sıfırla', cls: 'btn-danger', action: () => {
+      state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      localStorage.removeItem('isimparatorlugu');
+      toast('Oyun sıfırlandı', 'success');
+      render();
+    }}
+  ]);
+}
+
+function nextDay() {
+  state.day++;
+  const income = getTotalIncome();
+  const expense = getTotalExpense();
+  const net = income - expense;
+  state.money += net;
+  state.totalIncome += income;
+  state.totalExpense += expense;
+
+  vibrateDay();
+
+  if (state.day % 5 === 0 || net < 0) {
+    const emoji = net >= 0 ? '💰' : '⚠️';
+    const durum = net >= 0 ? `+${fmt(net)}` : `${fmt(net)}`;
+    showNotification(`${emoji} Gün ${state.day}`, `Net: ${durum} | Bakiye: ${fmt(state.money)}`, 'day-update');
+  }
+
+  if (Math.random() < 0.15 && state.businesses.length > 0) {
+    const b = rand(state.businesses);
+    const type = BUSINESS_TYPES.find(t => t.id === b.typeId);
+    const extra = Math.floor(type.baseIncome * 0.5);
+    state.money += extra;
+    state.totalIncome += extra;
+    log(`🎉 ${b.name} yoğun gün! +${fmt(extra)} ekstra`, 'income');
+    toast(`🎉 ${b.name} bugün çok yoğundu! +${fmt(extra)}`, 'success');
+    showNotification(`🎉 ${b.name} Yoğun Gün!`, `Bugün ekstra ${fmt(extra)} kazandın!`, 'busy-day');
+  }
+
+  if (state.money < 0 && state.day % 3 === 0) {
+    showNotification('⚠️ Bakiye Negatif!', `Hesabın ${fmt(state.money)}. Giderleri azalt!`, 'bankrupt');
+  }
+
+  render();
+  save();
+}
+
+setInterval(nextDay, 8000);
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.onclick = () => {
+    vibrate(10);
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    $('page-' + tab.dataset.page).classList.add('active');
+  };
+});
+
+// ===== KAYIT =====
+function save() {
+  try {
+    localStorage.setItem('isimparatorlugu', JSON.stringify(state));
+    localStorage.setItem('isimp_settings', JSON.stringify(settings));
+  } catch(e) {}
+}
+function load() {
+  try {
+    const s = localStorage.getItem('isimparatorlugu');
+    if (s) state = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), JSON.parse(s));
+    const st = localStorage.getItem('isimp_settings');
+    if (st) settings = Object.assign(settings, JSON.parse(st));
+  } catch(e) {}
+}
+function saveSettings() {
+  try { localStorage.setItem('isimp_settings', JSON.stringify(settings)); } catch(e) {}
+}
+
+window.addEventListener('beforeunload', save);
+setInterval(save, 5000);
+
+window.addEventListener('online', () => {
+  $('offlineBadge').classList.remove('show');
+  toast('🌐 İnternet bağlantısı geri geldi', 'success');
+});
+window.addEventListener('offline', () => {
+  $('offlineBadge').classList.add('show');
+  toast('📴 Çevrimdışı moddasın', '');
+});
+
+// ===== BAŞLAT =====
+load();
+render();
+updateVibUI();
+updateNotifUI();
+
+if ('Notification' in window && Notification.permission === 'default') {
+  setTimeout(() => $('notifCard').classList.add('show'), 3000);
+}
+
+if (!isStandalone) {
+  setTimeout(() => {
+    if (!deferredPrompt) showInstallButtons();
+  }, 1500);
+} else {
+  hideInstallButtons();
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(e => console.log('SW kayıt hatası:', e));
+  });
+}
+
+setTimeout(() => {
+  toast('👑 Krallığına hoş geldin!', 'success');
+}, 1200);
+</script>
+</body>
+</html>
