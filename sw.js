@@ -1,4 +1,4 @@
-const CACHE_NAME = 'is-imparatorlugu-v2';
+const CACHE_NAME = 'TheCeo';
 const ASSETS = [
   './',
   './index.html',
