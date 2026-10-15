@@ -1,6 +1,6 @@
 {
-  "name": "İş İmparatorluğu",
-  "short_name": "İş İmp.",
+  "name": "TheCeo",
+  "short_name": "TheCeo",
   "description": "İşletme kur, çalışan al, imparatorluğunu büyüt!",
   "start_url": "./index.html",
   "scope": "./",
